@@ -1,4 +1,4 @@
-# ZEP-Discrimination-ABX-Experiment
+# ZEP Discrimination ABX Experiment
 Experiment:
         Match-to-sample Auditory Discrimination (ABX)
 
