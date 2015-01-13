@@ -1,0 +1,104 @@
+/******************************************************************************\
+FILE:           stimuli.zm
+AUTHOR:         Theo Veenker (UiL-OTS) <T.J.G.Veenker@uu.nl>
+ADAPTED BY:     -
+
+DESCRIPTION:
+
+Defines the formats of item table(s) and provides the actual content of
+the item table(s) i.e. stimulus information.
+
+
+HISTORY:
+2012-01-30 TV   Created.
+
+\******************************************************************************/
+
+
+// Symbolic definition of stimulus type.
+enum StimType
+{
+    S1,                 // ba-da continuum step 1 (begin)
+    S2,                 // ba-da continuum step 2
+    S3,                 // ba-da continuum step 3 (center)
+    S4,                 // ba-da continuum step 4
+    S5,                 // ba-da continuum step 5 (end)
+}
+
+
+// Item record used for the test phase item table.
+record TestItem
+{
+    int         id;             // item id
+    int         test;           // does X match A or B: 1=A or 2=B
+    StimType    typeA;          // stimulus type for A
+    StimType    typeB;          // stimulus type for B
+    string      sndfnA;         // stimulus sound filename for A
+    string      sndfnB;         // stimulus sound filename for B
+}
+
+
+// Item table used in the practice phase before the test phase.
+//   index: item number
+TestItem[..] test_prac_items =
+{
+    {1,         1,      S5,     S1,     "bada5.wav",    "bada1.wav"},
+    {2,         2,      S2,     S4,     "bada2.wav",    "bada4.wav"},
+    {3,         2,      S5,     S1,     "bada5.wav",    "bada1.wav"},
+    {4,         1,      S2,     S4,     "bada2.wav",    "bada4.wav"},
+};
+
+// Item table used in the test phase.
+//   index: item number
+TestItem[..] test_items =
+{
+    {1,         1,      S2,     S1,     "bada2.wav",    "bada1.wav"},
+    {2,         1,      S3,     S1,     "bada3.wav",    "bada1.wav"},
+    {3,         1,      S4,     S1,     "bada4.wav",    "bada1.wav"},
+    {4,         1,      S5,     S1,     "bada5.wav",    "bada1.wav"},
+/*
+    {5,         1,      S1,     S2,     "bada1.wav",    "bada2.wav"},
+    {6,         1,      S3,     S2,     "bada3.wav",    "bada2.wav"},
+    {7,         1,      S4,     S2,     "bada4.wav",    "bada2.wav"},
+    {8,         1,      S5,     S2,     "bada5.wav",    "bada2.wav"},
+
+    {9,         1,      S1,     S3,     "bada1.wav",    "bada3.wav"},
+    {10,        1,      S2,     S3,     "bada2.wav",    "bada3.wav"},
+    {11,        1,      S4,     S3,     "bada4.wav",    "bada3.wav"},
+    {12,        1,      S5,     S3,     "bada5.wav",    "bada3.wav"},
+
+    {13,        1,      S1,     S4,     "bada1.wav",    "bada4.wav"},
+    {14,        1,      S2,     S4,     "bada2.wav",    "bada4.wav"},
+    {15,        1,      S3,     S4,     "bada3.wav",    "bada4.wav"},
+    {16,        1,      S5,     S4,     "bada5.wav",    "bada4.wav"},
+
+    {17,        1,      S1,     S5,     "bada1.wav",    "bada5.wav"},
+    {18,        1,      S2,     S5,     "bada2.wav",    "bada5.wav"},
+    {19,        1,      S3,     S5,     "bada3.wav",    "bada5.wav"},
+    {20,        1,      S4,     S5,     "bada4.wav",    "bada5.wav"},
+
+    {21,        2,      S2,     S1,     "bada2.wav",    "bada1.wav"},
+    {22,        2,      S3,     S1,     "bada3.wav",    "bada1.wav"},
+    {23,        2,      S4,     S1,     "bada4.wav",    "bada1.wav"},
+    {24,        2,      S5,     S1,     "bada5.wav",    "bada1.wav"},
+
+    {25,        2,      S1,     S2,     "bada1.wav",    "bada2.wav"},
+    {26,        2,      S3,     S2,     "bada3.wav",    "bada2.wav"},
+    {27,        2,      S4,     S2,     "bada4.wav",    "bada2.wav"},
+    {28,        2,      S5,     S2,     "bada5.wav",    "bada2.wav"},
+
+    {29,        2,      S1,     S3,     "bada1.wav",    "bada3.wav"},
+    {30,        2,      S2,     S3,     "bada2.wav",    "bada3.wav"},
+    {31,        2,      S4,     S3,     "bada4.wav",    "bada3.wav"},
+    {32,        2,      S5,     S3,     "bada5.wav",    "bada3.wav"},
+
+    {33,        2,      S1,     S4,     "bada1.wav",    "bada4.wav"},
+    {34,        2,      S2,     S4,     "bada2.wav",    "bada4.wav"},
+    {35,        2,      S3,     S4,     "bada3.wav",    "bada4.wav"},
+    {36,        2,      S5,     S4,     "bada5.wav",    "bada4.wav"},
+*/
+    {37,        2,      S1,     S5,     "bada1.wav",    "bada5.wav"},
+    {38,        2,      S2,     S5,     "bada2.wav",    "bada5.wav"},
+    {39,        2,      S3,     S5,     "bada3.wav",    "bada5.wav"},
+    {40,        2,      S4,     S5,     "bada4.wav",    "bada5.wav"},
+};
