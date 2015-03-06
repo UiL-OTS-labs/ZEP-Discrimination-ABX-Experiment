@@ -1,42 +1,31 @@
 /******************************************************************************\
 FILE:           discr_abx.zp
-AUTHOR:         Theo Veenker (UiL-OTS) <T.J.G.Veenker@uu.nl>
+AUTHOR:         Theo Veenker <theo.veenker@beexy.nl>
 ADAPTED BY:     -
-
-EXPERIMENT:     Match-to-sample Auditory Discrimination (ABX)
 
 DESCRIPTION:
 
-Purpose of this experiment is to measure a participant's ability to
-discriminate (speech) sounds. For each trial three sound stimuli are
-presented. Participant's task is to indicate whether the third stimulus
-is a replication of the first stimulus or a replication of the second
-stimulus. Auto-paced. Output: chosen value, RT and correctness.
+Implementation of task: Match-to-sample Auditory Discrimination (ABX)
+
+For more information on the discr_abx task see readme.txt in the 
+test folder.
 
 
 Global structure of experiment:
 
   - welcome
 
-  - instructions
-
-  - practice phase (... trials)
-      trial
-
-  - pause
-
-  - test phase (... trials)
-      trial
+  - phase 1 (see subfolder test)
 
   - thankyou
 
 
 HISTORY:
-2012-01-30 TV   Created.
+2013-07-03 TV   Created.
 
 \******************************************************************************/
 
-requires 1.6;
+requires 1.10;
 
 import std_windows1;
 import std_texts_en;
@@ -44,9 +33,8 @@ import std_entry_page1;
 import std_exit_page1;
 import std_pause_page;
 import std_blank_page;
-import std_sound_output_device;
 
-import test_page;
+import test::task;
 
 
 Experiment experiment
@@ -54,11 +42,17 @@ Experiment experiment
     on_event:entry()
     {
         show_test_windows();
+    }
 
-        control.button_box.open();
 
-        // If necessary set parallel port line D0 to power button box device.
-//        control.button_box.output(0x02);
+    on_event:message()
+    {
+        // On Ctrl+F4 jump unconditionally to the thank-you part.
+        if (message_sender == control && message_arg == SYS_STOP)
+        {
+            control.mark_experiment_aborted();
+            thankyou.enter();
+        }
     }
 
 
@@ -72,171 +66,11 @@ Experiment experiment
     }
 
 
-    Part instructions
+    Part phase1
     {
         on_event:entry()
         {
-//            pause_page.set_text_size(1000, 600);
-            pause_page.set_text(
-                "<b>Dear participant,</b>\n"
-                "\n"
-                "Thank you for participating in this experiment.\n"
-                "\n"
-                "You are now going to hear word fragments over the headphones. "
-                "The word fragments come in sequences of three. Your task is "
-                "to indicate for each sequence as quickly as possible whether "
-                "you think the third fragment is identical to the <i>first</i> "
-                "or the <i>second</i> fragment.\n"
-                "\n"
-
-                "To respond, hit the left button on the button-box for "
-                "<i>First</i> and the right button for <i>Second</i>.\n"
-
-//                "To respond, hit the left shift key for <i>First</i> and the "
-//                "right shift key for <i>Second</i>.\n"
-
-//                "To respond, hit the left button on the button-box for "
-//                "<i>First</i> and the right button for <i>Second</i>. "
-//                "Alternatively you can use the left or right shift keys.\n"
-
-                "\n"
-                "First we will do a short practice.\n"
-                "\n"
-//                "<i>Hit Enter when ready to start.</i>", 
-                "<i>Hit any button on the button-box when ready to start.</i>", 
-                true);
-
-            pause_page.action(this);
-            control.button_box.enable_all_buttons(CONTINUE);
-        }
-    }
-
-
-    Block practice
-    {
-        TestItem        item;   // current item
-
-
-        on_event:entry()
-        {
-            num_cycles = test_prac_items.size;
-
-            // Prepare test page: progress bar, feedback and prompt enabled.
-            test_page.setup(num_cycles, true, true);
-        }
-
-
-        on_event:exit()
-        {
-            test_page.cleanup();
-        }
-
-
-        Trial trial
-        {
-            on_event:entry()
-            {
-                item = test_prac_items[practice.cycle];
-
-                test_page.action(this, item, reference_time, practice.cycle);
-            }
-        }
-    }
-
-
-    Part
-    {
-        on_event:entry()
-        {
-            blank_page.action_auto(this, 500ms);
-        }
-    }
-
-
-    Part pause
-    {
-        on_event:entry()
-        {
-            pause_page.set_text(
-                "End of the practice part.\n"
-                "\n"
-                "If you have any questions at this moment please ask the "
-                "experimenter now.\n"
-                "\n"
-//                "<i>Hit Enter when ready to proceed.</i>", 
-                "<i>Hit any button on the button-box when ready to "
-                "proceed.</i>", 
-                true);
-
-            pause_page.action(this);
-            control.button_box.enable_all_buttons(CONTINUE);
-        }
-    }
-
-
-    Block test
-    {
-        TestItem        item;   // current item
-
-
-        on_event:entry()
-        {
-            // Randomize test items table.
-            if (shuffle_test_items() != OK) terminate;
-
-            num_cycles = test_items.size;
-//            num_cycles = 3;
-
-            // Prepare test page: progress bar enabled, feedback and prompt 
-            // disabled.
-            test_page.setup(num_cycles, false, false);
-        }
-
-
-        on_event:exit()
-        {
-            test_page.cleanup();
-
-            // Save test phase output table as CSV file.
-            test_output_save();
-        }
-
-
-        Trial trial
-        {
-            on_event:entry()
-            {
-                item = test_items[test.cycle];
-
-                test_page.action(this, item, reference_time, test.cycle);
-            }
-
-
-            on_event:exit()
-            {
-                // Add new row to test output table.
-                TestOutput output;
-                output.trialnum = test.cycle + 1;
-                output.id = item.id;
-                output.test = item.test;
-                output.typeA = item.typeA;
-                output.typeB = item.typeB;
-                output.sndfnA = item.sndfnA;
-                output.sndfnB = item.sndfnB;
-                output.value = test_page.response.value;
-                output.rt = test_page.response.rt;
-                output.correct = test_page.response.correct;
-                test_output_append(output);
-            }
-        }
-    }
-
-
-    Part
-    {
-        on_event:entry()
-        {
-            blank_page.action_auto(this, 500ms, 500ms);
+            test::action(this);
         }
     }
 

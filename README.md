@@ -1,4 +1,3 @@
-# ZEP Discrimination ABX Experiment
 Experiment:
         Match-to-sample Auditory Discrimination (ABX)
 
@@ -10,7 +9,7 @@ Description:
         stimulus. Auto-paced. Output: chosen value, RT and correctness.
 
 Author:
-        Theo Veenker (UiL-OTS) <T.J.G.Veenker@uu.nl>
+        Theo Veenker <theo.veenker@beexy.nl>
 
 Client:
         -
@@ -22,14 +21,10 @@ References:
         -
 
 
-You can start up the experiment by typing:
-
-        zep discr_abx
-
-For more information on running the experiment and extracting the experiment
-results please go the the Zep website at http://www.hum.uu.nl/uilots/lab/zep
-and check out the documentation section. There you'll also find explanations
-and instructions that help you understand and modify a Zep experiment.
+For information on running the experiment and extracting the experiment
+results please go the the Zep website at http://www.beexy.nl/zep and check 
+out the documentation section. There you'll also find explanations and 
+instructions that help you understand and modify a Zep experiment.
 
 
 DISCLAIMER
